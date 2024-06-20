@@ -179,3 +179,101 @@ await m.reply(aFk.text1)
 client.groupParticipantsUpdate(m.chat, [m.sender], 'remove')}}}
   
 switch(prefix && command) {
+
+case 'play': {
+if (!text) return m.reply(play.text1)
+try {
+m.react('🚩') 
+const search = await yts(`${text}`)
+const data = search.all
+const Ibuff = await getBuffer(data[0].image)
+const ytMsg = `\`${play.text2}\`\n\n${play.text3} _${search.all[0].title}_\n${play.text4} _${search.all[0].views}_\n${play.text5} _${search.videos[0].url}_`
+await client.sendButton(m.chat, ytMsg, play.text6, null, [['Audio 🔊', `${prefix}play2 ${text}`], ['Video 🎞️', `${prefix}play3 ${text}`], [`${play.text7}`, `${prefix}yts ${text}`]], null, null, m)
+} catch (e) {
+return m.reply(play.text8 + '\n\n> ' + e)
+}
+}
+break
+
+case 'ytmp3': case 'play2': {
+if (!text) return m.reply(play2.text1)
+const search = await yts(`${text}`)
+const data = await search.all.filter((v) => v.type == 'video')
+m.react('🕕') 
+try {
+var resC = data[0]
+} catch {
+var resD = data[1]
+}
+try {
+let c = '360' + 'p'
+let y = search.videos[0].url
+const yt = await youtubedl(y).catch(async _ => await youtubedlv2(y))
+const dl_url = await yt.video[c].download()
+const ttl = await yt.title
+const size = await yt.video[c].fileSizeH
+client.sendMessage(m.chat, { audio: {url: dl_url}, mimetype: 'audio/mpeg'}, {quoted: m})
+m.react('✅') 
+} catch (e) {
+return m.reply(play3.text2 + '\n\n> ' + e)
+m.react('❎') 
+}
+}
+break
+
+case 'ytmp4': case 'play3': {
+if (!text) return m.reply(play3.text1)
+const search3 = await yts(`${text}`)
+const data2 = await search3.all.filter((v) => v.type == 'video')
+m.react('✨️') 
+try {
+var resC = data2[0]
+} catch {
+var resD = data2[1]
+}
+try {
+let c = '720' + 'p'
+let y = search3.videos[0].url
+const yt = await youtubedl(y).catch(async _ => await youtubedlv2(y))
+const dl_url = await yt.video[c].download()
+const ttl = await yt.title
+const size = await yt.video[c].fileSizeH
+await client.sendMessage(m.chat, { document: { url: dl_url }, fileName: `${ttl}.mp4`, mimetype: 'video/mp4', caption: `✨️ TsuyuriBot : By GL YT MX ✨️`, thumbnail: await fetch(yt.thumbnail) }, { quoted: m })
+m.react('🌹') 
+} catch (e) {
+return m.reply(play3.text2 + '\n\n> ' + e)
+m.react('❌️') 
+}
+}
+break  
+    
+//「 FUNCION EVA (>) <OWNER> 」
+if (budy.startsWith('_')) {
+if (!isCreator) return
+try {
+return m.reply(JSON.stringify(eval(budy.slice(2)), null, '\t'))
+} catch (e) {
+e = String(e)
+m.reply(e)
+}}
+if (budy.startsWith('-')) {
+if (!isCreator) return
+try {
+return  reply(JSON.stringify(eval(`(async () => { ${budy.slice(3)} })()`), null, '\t'))  //gata.sendMessage(from, JSON.stringify(eval(`(async () => { ${budy.slice(3)} })()`), null, '\t'), text, { quoted: msg })
+} catch (e) {
+e = String(e)
+m.reply(e)
+}}
+		
+}
+} catch (MDK) {
+console.log(MDK)
+}}
+
+let file = require.resolve(__filename)
+fs.watchFile(file, () => {
+fs.unwatchFile(file)
+console.log(chalk.greenBright(`\n\nSe actualizo el archivo ${__filename}`))
+delete require.cache[file]
+require(file)
+})

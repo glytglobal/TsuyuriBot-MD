@@ -49,7 +49,7 @@ const methodCodeQR = process.argv.includes('qr')
 const MethodMobile = process.argv.includes('mobile')
 
 let opcion
-if (!fs.existsSync(./${session}/creds.json) && !methodCodeQR) {
+if (!fs.existsSync(/${session}/creds.json) && !methodCodeQR) {
 while (true) {
 opcion = await question(marco('*****\n') + nameb('TsuyuriBot-MD\n') + marco('*****\n') + colores('OPCIONES DE CONEXION:\n') + opcionQR('1. CODIGO QR\n') + opcionTexto('2. CODIGO 8 DIGITOS\n'))
 if (opcion === '1' || opcion === '2') {
